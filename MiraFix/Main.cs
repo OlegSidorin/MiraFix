@@ -15,13 +15,18 @@
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class Main : IExternalApplication
     {
-        public static string TabName { get; set; } = "КСП-ТИМ-2";
-        public static string PanelName { get; set; } = "Посчитать";
-        public static string PanelTransferring { get; set; } = "Посчитать";
-        public static string ButtonName { get; set; } = "SumBtn";
-        public static string ButtonText { get; set; } = "Сменить\nномер";
+        //public static string TabName { get; set; } = "КСП-ТИМ-Mira2";
+        public static string TabNameMira { get; set; } = "◄Miracad►";
+        public static string PanelName { get; set; } = "ChangeId";
+        //public static string PanelTransferring { get; set; } = "CustomCtrl_%◄Miracad►%Панель навигации";
+        public static string Button1Name { get; set; } = "MoveIDBtn";
+        public static string Button1Text { get; set; } = "Очистить\nID";
+        public static string Button2Name { get; set; } = "ReturnIDBtn";
+        public static string Button2Text { get; set; } = "Вернуть\nID";
         public Result OnStartup(UIControlledApplication application)
         {
+            #region если нужно, то можно получить наименования панелей
+            /*
             string st = "";
             adWin.RibbonControl ribbon = adWin.ComponentManager.Ribbon;
             foreach (adWin.RibbonTab tab in ribbon.Tabs)
@@ -41,29 +46,43 @@
             if (!Directory.Exists(workingDir)) 
                 Directory.CreateDirectory(workingDir);
             WriteToFile(workingDir, "ribbons", st);
-            List<RibbonPanel> panels = application.GetRibbonPanels();
-            string str = "";
-
-            application.CreateRibbonTab(TabName);
-            RibbonPanel panelVS = application.CreateRibbonPanel(TabName, PanelName);
-            var mypanels = application.GetRibbonPanels(); //.Where(xxx => xxx.Name == "MiraPanel").First();
-
+            */
+            #endregion
+            
             string path = Assembly.GetExecutingAssembly().Location;
-            string st1 = "";
+
+            #region другой способ, дает только созданиые плагинами, но Miracad почему-то нет
+            /*
+            List<RibbonPanel> panels = application.GetRibbonPanels();
+            var mypanels = application.GetRibbonPanels(); //.Where(xxx => xxx.Name == "MiraPanel").First();
+            string str = "";
             foreach (var p in mypanels)
             {
-                st1 += p.Name + p.Title + Environment.NewLine;
+                str += p.Name + p.Title + Environment.NewLine;
             }
-            TaskDialog.Show("123", st1);
-
-
-            PushButtonData SumBtnData = new PushButtonData(ButtonName, ButtonText, path, "KSP_VolumesSum.VSum")
+            TaskDialog.Show("123", str);
+            */
+            #endregion
+            
+            //application.CreateRibbonTab(TabName);
+            RibbonPanel panelMira = application.CreateRibbonPanel(TabNameMira, PanelName);
+            PushButtonData Mira01BtnData = new PushButtonData(Button1Name, Button1Text, path, "MiraFix.Button01Command")
             {
-                ToolTipImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mirafix-32.png", UriKind.Absolute)),
-                ToolTip = "Суммирует объемы элементов модели, если они есть"
+                ToolTipImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_01-32.png", UriKind.Absolute)),
+                ToolTip = "Удаляет ID"
             };
-            PushButton SumBtn = panelVS.AddItem(SumBtnData) as PushButton;
-            SumBtn.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mirafix-32.png", UriKind.Absolute));
+            PushButton Mira01Btn = panelMira.AddItem(Mira01BtnData) as PushButton;
+            Mira01Btn.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_01-32.png", UriKind.Absolute));
+            
+            PushButtonData Mira02BtnData = new PushButtonData(Button2Name, Button2Text, path, "MiraFix.Button02Command")
+            {
+                ToolTipImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_02-32.png", UriKind.Absolute)),
+                ToolTip = "Возвращает ID"
+            };
+            PushButton Mira02Btn = panelMira.AddItem(Mira02BtnData) as PushButton;
+            Mira02Btn.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_02-32.png", UriKind.Absolute));
+
+            //PlaceButtonOnMiraRibbon();
 
 
             return Result.Succeeded;
@@ -73,7 +92,7 @@
         {
             return Result.Succeeded;
         }
-        public void WriteToFile(string dir, string name, string txt)
+        void WriteToFile(string dir, string name, string txt)
         {
             string fileName = dir + "\\" + name + ".txt";
             if (File.Exists(fileName))
@@ -84,6 +103,101 @@
             {
                 writer.Write(txt);
             }
+        }
+        
+        void PlaceButtonOnMiraRibbon()
+        {
+            /*
+
+            try
+            {
+                String SystemTabId = "◄Miracad►";
+                String SystemPanelId = "CustomCtrl_%◄Miracad►%Панель навигации";
+
+                adWin.RibbonControl adWinRibbon = adWin.ComponentManager.Ribbon;
+
+                adWin.RibbonTab adWinSysTab = null;
+                adWin.RibbonPanel adWinSysPanel = null;
+
+                adWin.RibbonTab adWinApiTab = null;
+                adWin.RibbonPanel adWinApiPanel = null;
+                adWin.RibbonItem adWinApiItem = null;
+
+                foreach (adWin.RibbonTab ribbonTab in adWinRibbon.Tabs)
+                {
+                    // Look for the specified system tab
+
+                    if (ribbonTab.Id == SystemTabId)
+                    {
+                        adWinSysTab = ribbonTab;
+
+                        foreach (adWin.RibbonPanel ribbonPanel in ribbonTab.Panels)
+                        {
+                            // Look for the specified panel 
+                            // within the system tab
+
+                            if (ribbonPanel.Source.Id == SystemPanelId)
+                            {
+                                adWinSysPanel = ribbonPanel;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Look for our API tab
+
+                        if (ribbonTab.Id == Main.TabName)
+                        {
+                            adWinApiTab = ribbonTab;
+
+                            foreach (adWin.RibbonPanel ribbonPanel in ribbonTab.Panels)
+                            {
+                                if (ribbonPanel.Source.Id == "CustomCtrl_%" + Main.TabName + "%" + Main.PanelName)
+                                {
+                                    foreach (adWin.RibbonItem ribbonItem in ribbonPanel.Source.Items)
+                                    {
+                                        if (ribbonItem.Id == "CustomCtrl_%CustomCtrl_%" + Main.TabName + "%" + Main.PanelName + "%" + Main.Button1Name)
+                                        {
+                                            adWinApiItem = ribbonItem;
+                                        }
+                                    }
+                                }
+
+                                if (ribbonPanel.Source.Id == "CustomCtrl_%" + Main.TabName + "%" + Main.PanelName)
+                                {
+                                    adWinApiPanel = ribbonPanel;
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                if (adWinSysTab != null
+                  && adWinSysPanel != null
+                  && adWinApiTab != null
+                  && adWinApiPanel != null
+                   && adWinApiItem != null)
+                {
+                    adWinSysTab.Panels.Add(adWinApiPanel);
+                    adWinApiTab.IsVisible = false;
+                    //adWinApiPanel.Source.Items.Add(adWinApiItem);
+                    //adWinApiTab.Panels.Remove(adWinApiPanel);
+                }
+
+
+            }
+
+            #region catch and finally
+            catch (Exception ex)
+            {
+                TaskDialog.Show("me", ex.Message + Environment.NewLine + ex.InnerException);
+            }
+            finally
+            {
+            }
+            #endregion
+            */
         }
 
     }

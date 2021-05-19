@@ -2,7 +2,7 @@
 <RevitAddIns>
 	<AddIn Type="Application">
 		<Name>KSP_MiraFix</Name>
-		<Assembly>C:\Users\Sidorin\source\repos\MiraFix\MiraFix\bin\x64\Debug\MiraFix.dll</Assembly>
+		<Assembly>C:\Users\Sidorin_O\Source\Repos\MiraFix\MiraFix\bin\x64\Debug\MiraFix.dll</Assembly>
 		<AddInId>B96929BA-4D42-4C38-84F7-7F6634631742</AddInId>
 		<FullClassName>MiraFix.Main</FullClassName>
 		<VendorId>KSP</VendorId>

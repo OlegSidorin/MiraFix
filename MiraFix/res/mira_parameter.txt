@@ -1,0 +1,23 @@
+--------------------- APIObject ----------------------------------------------------
+---------------  --- Properties ----------------------------------------------------
+                         IsReadOnly    False
+------------------  --- Methods ----------------------------------------------------
+--------------------- Parameter ----------------------------------------------------
+---------------  --- Properties ----------------------------------------------------
+                         Definition    < InternalDefinition  McCm_HostUniqueId >
+                    DisplayUnitType    Адресат вызова создал исключение.
+                            Element    < 600 мм Arial  3156024 >
+                               GUID    000508ad-5ea5-607b-58dc-861fd8601099
+                           HasValue    True
+                                 Id    3155864
+                           IsShared    True
+                        StorageType    String
+                     UserModifiable    False
+------------------  --- Methods ----------------------------------------------------
+                           AsDouble    0
+                        AsElementId    < null >
+                          AsInteger    0
+                           AsString    7691c46e-13d4-4358-b13c-c21b11dce5ef-0004531d
+                      AsValueString    
+CanBeAssociatedWithGlobalParameters    False
+       GetAssociatedGlobalParameter    < null >
