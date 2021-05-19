@@ -37,25 +37,29 @@
                 using (Transaction t = new Transaction(doc, "on45"))
                 {
                     t.Start();
-                    Element myElement = doc.GetElement(uidoc.Selection.GetElementIds().First());
-                    //ElementType myElementType = doc.GetElement(myElement.GetTypeId()) as ElementType;
-
                     Guid.TryParse("000508ad-5ea5-607b-58dc-861fd8601099", out Guid g);
                     Guid.TryParse("fa6b0a0d-a453-4462-9f3f-12ccc822c304", out Guid gTemp);
-
-                    string pValue = myElement.get_Parameter(g).AsString();
-                    string pTempValue = myElement.get_Parameter(gTemp).AsString();
-                    if (pTempValue != "")
+                    try
                     {
-                        myElement.get_Parameter(g).Set(pTempValue);
-                        myElement.get_Parameter(gTemp).Set("");
+                        Element myElement = doc.GetElement(uidoc.Selection.GetElementIds().First());
+                        //ElementType myElementType = doc.GetElement(myElement.GetTypeId()) as ElementType;
+                        string pValue = myElement.get_Parameter(g).AsString();
+                        string pTempValue = myElement.get_Parameter(gTemp).AsString();
+                        if (pValue != "")
+                        {
+                            myElement.get_Parameter(g).Set(pTempValue);
+                            myElement.get_Parameter(gTemp).Set("");
+                        }
+                        //SharedParameterElement sp = SharedParameterElement.Lookup(doc, g);
+                        //SharedParameterElement spTemp = SharedParameterElement.Lookup(doc, gTemp);
+                        //InternalDefinition def = sp.GetDefinition();
                     }
-
-                    //SharedParameterElement sp = SharedParameterElement.Lookup(doc, g);
-                    //SharedParameterElement spTemp = SharedParameterElement.Lookup(doc, gTemp);
-                    //InternalDefinition def = sp.GetDefinition();
-
-                    TaskDialog.Show("123", "did");
+                    catch
+                    {
+                        //TaskDialog.Show("1", "Надо выделить элемент");
+                        return Result.Succeeded;
+                    }
+                    //TaskDialog.Show("123", "did");
                     t.Commit();
                 }
             }

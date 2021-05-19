@@ -6,6 +6,8 @@
     using System;
     using System.IO;
     using System.Reflection;
+    using System.Linq;
+    using System.Collections.Generic;
 
     class CreateSharedParameter
     {
@@ -16,13 +18,22 @@
             Guid guid; 
             Guid.TryParse("fa6b0a0d-a453-4462-9f3f-12ccc822c304", out guid);
 
-            CategorySet categorySet = app.Create.NewCategorySet();
-            categorySet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_Levels));
-            categorySet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_GenericModel));
-            categorySet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_Walls));
-            categorySet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_FlexPipeCurves));
-            categorySet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_DuctCurves));
+            CategorySet catSet = app.Create.NewCategorySet();
+            Categories categories = doc.Settings.Categories;
+            foreach (Category c in categories)
+            {
+                if (c.AllowsBoundParameters)
+                {
+                    try
+                    {
+                        catSet.Insert(doc.Settings.Categories.get_Item(c.Name));
+                    }
+                    catch
+                    {
 
+                    }
+                }
+            }
             string originalFile = app.SharedParametersFilename;
             string tempFile = Path.GetDirectoryName(path) + "\\res\\MIRAFIX_FOP.txt";
 
@@ -41,7 +52,7 @@
                         using (Transaction t = new Transaction(doc))
                         {
                             t.Start("Add Shared Parameters");
-                            InstanceBinding newIB = app.Create.NewInstanceBinding(categorySet);
+                            InstanceBinding newIB = app.Create.NewInstanceBinding(catSet);
                             doc.ParameterBindings.Insert(externalDefinition, newIB, BuiltInParameterGroup.INVALID);
                             SharedParameterElement sp = SharedParameterElement.Lookup(doc, guid);
                             InternalDefinition def = sp.GetDefinition();
@@ -56,6 +67,17 @@
             {
                 app.SharedParametersFilename = originalFile;
             }
+        }
+
+        CategorySet myCategorySet(Document doc, Application app)
+        {
+            CategorySet catSet = app.Create.NewCategorySet();
+
+            //catSet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_Levels));
+            //catSet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_GenericModel));
+            //catSet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_Walls));
+
+            return catSet;
         }
     }
 }
