@@ -20,6 +20,7 @@
 
             CategorySet catSet = app.Create.NewCategorySet();
             Categories categories = doc.Settings.Categories;
+
             foreach (Category c in categories)
             {
                 if (c.AllowsBoundParameters)
@@ -28,9 +29,9 @@
                     {
                         catSet.Insert(doc.Settings.Categories.get_Item(c.Name));
                     }
-                    catch
+                    catch (Exception e)
                     {
-
+                        //TaskDialog.Show("Warning", e.ToString());
                     }
                 }
             }
@@ -41,43 +42,34 @@
             {
                 app.SharedParametersFilename = tempFile;
 
-                DefinitionFile sharedParameterFile = app.OpenSharedParameterFile();
-
-                foreach (DefinitionGroup dg in sharedParameterFile.Groups)
+                using (Transaction t = new Transaction(doc))
                 {
-                    if (dg.Name == "GROUP")
-                    {
-                        ExternalDefinition externalDefinition = dg.Definitions.get_Item("McCm_HostUniqueIdTemp") as ExternalDefinition;
-                        guid = externalDefinition.GUID;
-                        using (Transaction t = new Transaction(doc))
-                        {
-                            t.Start("Add Shared Parameters");
-                            InstanceBinding newIB = app.Create.NewInstanceBinding(catSet);
-                            doc.ParameterBindings.Insert(externalDefinition, newIB, BuiltInParameterGroup.INVALID);
-                            SharedParameterElement sp = SharedParameterElement.Lookup(doc, guid);
-                            InternalDefinition def = sp.GetDefinition();
-                            def.SetAllowVaryBetweenGroups(doc, true);
-                            t.Commit();
-                        }
-                    }
+                    t.Start("Add Shared Parameters");
+                    DefinitionFile sharedParameterFile = app.OpenSharedParameterFile();
+                    DefinitionGroup sharedParameterGroup = sharedParameterFile.Groups.get_Item("GROUP");
+                    Definition sharedParameterDefinition = sharedParameterGroup.Definitions.get_Item("McCm_HostUniqueIdTemp");
+                    ExternalDefinition externalDefinition =
+                    sharedParameterGroup.Definitions.get_Item("McCm_HostUniqueIdTemp") as ExternalDefinition;
+                    guid = externalDefinition.GUID;
+                    InstanceBinding newIB = app.Create.NewInstanceBinding(catSet);
+                    doc.ParameterBindings.Insert(externalDefinition, newIB, BuiltInParameterGroup.INVALID);
+                            
+                    SharedParameterElement sp = SharedParameterElement.Lookup(doc, guid);
+                    InternalDefinition def = sp.GetDefinition();
+                    def.SetAllowVaryBetweenGroups(doc, true);
+                    t.Commit();
                 }
+
             }
-            catch { }
+            catch (Exception e)
+            {
+                TaskDialog.Show("Warning", e.ToString());
+            }
             finally
             {
                 app.SharedParametersFilename = originalFile;
             }
         }
 
-        CategorySet myCategorySet(Document doc, Application app)
-        {
-            CategorySet catSet = app.Create.NewCategorySet();
-
-            //catSet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_Levels));
-            //catSet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_GenericModel));
-            //catSet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_Walls));
-
-            return catSet;
-        }
     }
 }

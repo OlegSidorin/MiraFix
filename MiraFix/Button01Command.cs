@@ -3,8 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Autodesk.Revit.UI;
     using Autodesk.Revit.DB;
 
@@ -27,11 +25,10 @@
             {
                 CreateSharedParameter createSharedParameter = new CreateSharedParameter();
                 createSharedParameter.CreateMiraSharedParameters(doc, commandData.Application.Application);
-                //TaskDialog.Show("123", "создан параметр ");
             }
             #endregion
 
-            #region Копирует данные параметра Mira в новый параметр в выделенном элементе
+            #region Копирует данные параметра McCm_HostUniqueId в McCm_HostUniqueIdTemp
             try
             {
                 using (Transaction t = new Transaction(doc, "on45"))
@@ -41,31 +38,37 @@
                     Guid.TryParse("fa6b0a0d-a453-4462-9f3f-12ccc822c304", out Guid gTemp);
                     try
                     {
-                        Element myElement = doc.GetElement(uidoc.Selection.GetElementIds().First());
+                        //Element myElement = doc.GetElement(uidoc.Selection.GetElementIds().First());
+                        IList<Element> gmodels = new FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_GenericModel)
+                            .WhereElementIsNotElementType().ToElements();
                         //ElementType myElementType = doc.GetElement(myElement.GetTypeId()) as ElementType;
-                        string pValue = myElement.get_Parameter(g).AsString();
-                        string pTempValue = myElement.get_Parameter(gTemp).AsString();
-                        if (pValue != "")
+                        foreach (var gmodel in gmodels)
                         {
-                            myElement.get_Parameter(gTemp).Set(pValue);
-                            myElement.get_Parameter(g).Set("");
+                            string pValue = gmodel.get_Parameter(g).AsString();
+                            string pTempValue = gmodel.get_Parameter(gTemp).AsString();
+                            if (pValue != "")
+                            {
+                                gmodel.get_Parameter(gTemp).Set(pValue);
+                                gmodel.get_Parameter(g).Set("");
+                            }
                         }
+                        
                         //SharedParameterElement sp = SharedParameterElement.Lookup(doc, g);
                         //SharedParameterElement spTemp = SharedParameterElement.Lookup(doc, gTemp);
                         //InternalDefinition def = sp.GetDefinition();
                     }
-                    catch
+                    catch (Exception e)
                     {
-                        //TaskDialog.Show("1", "Надо выделить элемент");
+                        TaskDialog.Show("Warning", e.ToString());
                         return Result.Succeeded;
                     }
-                    //TaskDialog.Show("123", "did");
+                    
                     t.Commit();
                 }
             }
             catch (Exception e)
             {
-                TaskDialog.Show("123", e.ToString());
+                TaskDialog.Show("Warning", e.ToString());
             }
             #endregion
 
