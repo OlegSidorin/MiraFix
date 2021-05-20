@@ -15,14 +15,14 @@
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class Main : IExternalApplication
     {
-        //public static string TabName { get; set; } = "КСП-ТИМ-Mira2";
+        public static string TabName { get; set; } = "◄Miracad►";
         public static string TabNameMira { get; set; } = "◄Miracad►";
-        public static string PanelName { get; set; } = "ChangeId";
+        public static string PanelName { get; set; } = "Согласование";
         //public static string PanelTransferring { get; set; } = "CustomCtrl_%◄Miracad►%Панель навигации";
         public static string Button1Name { get; set; } = "MoveIDBtn";
-        public static string Button1Text { get; set; } = "Очистить\nID";
+        public static string Button1Text { get; set; } = "Согласование\nс конструктором";
         public static string Button2Name { get; set; } = "ReturnIDBtn";
-        public static string Button2Text { get; set; } = "Вернуть\nID";
+        public static string Button2Text { get; set; } = "Согласование\nс инженером";
         public Result OnStartup(UIControlledApplication application)
         {
             #region если нужно, то можно получить наименования панелей
@@ -63,27 +63,63 @@
             TaskDialog.Show("123", str);
             */
             #endregion
-            
+
             //application.CreateRibbonTab(TabName);
-            RibbonPanel panelMira = application.CreateRibbonPanel(TabNameMira, PanelName);
+            string str = "";
+            var ribbonPanels = application.GetRibbonPanels(TabName);
+            RibbonPanel navigatonPanel = null;
+            foreach (RibbonPanel ribbonPanel in ribbonPanels)
+            {
+                if (ribbonPanel.Name == "Панель навигации")
+                {
+                    navigatonPanel = ribbonPanel;
+                }
+                
+            }
+            //TaskDialog.Show("123", str);
+            //RibbonPanel panelMira = application.CreateRibbonPanel(TabNameMira, PanelName);
             PushButtonData Mira01BtnData = new PushButtonData(Button1Name, Button1Text, path, "MiraFix.Button01Command")
             {
                 ToolTipImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_01-32.png", UriKind.Absolute)),
-                ToolTip = "Удаляет ID"
+                ToolTip = "Переносит McCm_HostUniqueId в McCm_HostUniqueIdTemp"
             };
-            PushButton Mira01Btn = panelMira.AddItem(Mira01BtnData) as PushButton;
-            Mira01Btn.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_01-32.png", UriKind.Absolute));
-            
+            Mira01BtnData.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_01-32.png", UriKind.Absolute));
+            //PushButton Mira01Btn = panelMira.AddItem(Mira01BtnData) as PushButton;
+            //Mira01Btn.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_01-32.png", UriKind.Absolute));
+
             PushButtonData Mira02BtnData = new PushButtonData(Button2Name, Button2Text, path, "MiraFix.Button02Command")
             {
                 ToolTipImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_02-32.png", UriKind.Absolute)),
-                ToolTip = "Возвращает ID"
+                ToolTip = "Возвращает McCm_HostUniqueId из McCm_HostUniqueIdTemp"
             };
-            PushButton Mira02Btn = panelMira.AddItem(Mira02BtnData) as PushButton;
-            Mira02Btn.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_02-32.png", UriKind.Absolute));
+            Mira02BtnData.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_02-32.png", UriKind.Absolute));
+            //PushButton Mira02Btn = panelMira.AddItem(Mira02BtnData) as PushButton;
+            //Mira02Btn.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_02-32.png", UriKind.Absolute));
+            //string str = "";
+
+
+            SplitButtonData sBtnData = new SplitButtonData("splitButton1", "Split");
+            SplitButton sBtn = navigatonPanel.AddItem(sBtnData) as SplitButton;
+            sBtn.AddPushButton(Mira01BtnData);
+            sBtn.AddPushButton(Mira02BtnData);
 
             //PlaceButtonOnMiraRibbon();
-
+            //adWin.RibbonPanel panelMiraNav = null;
+            //adWin.RibbonControl adWinRibbon = adWin.ComponentManager.Ribbon;
+            //foreach (adWin.RibbonTab ribbonTab in adWinRibbon.Tabs)
+            //{
+            //    if (ribbonTab.Id == "◄Miracad►")
+            //    {
+            //        foreach (adWin.RibbonPanel ribbonPanel in ribbonTab.Panels)
+            //        {
+            //            if (ribbonPanel.Source.Id == "CustomCtrl_%◄Miracad►%Панель навигации")
+            //            {
+            //                panelMiraNav = ribbonPanel;
+            //                str += ribbonTab.Id + " : " + ribbonPanel.Source.Id + "\n";
+            //            }
+            //        }
+            //    }
+            //}
 
             return Result.Succeeded;
         }
@@ -107,12 +143,12 @@
         
         void PlaceButtonOnMiraRibbon()
         {
-            /*
+            
 
             try
             {
                 String SystemTabId = "◄Miracad►";
-                String SystemPanelId = "CustomCtrl_%◄Miracad►%Панель навигации";
+                String SystemPanelId = "Панель навигации"; // "CustomCtrl_%◄Miracad►%Панель навигации";
 
                 adWin.RibbonControl adWinRibbon = adWin.ComponentManager.Ribbon;
 
@@ -197,7 +233,7 @@
             {
             }
             #endregion
-            */
+            
         }
 
     }

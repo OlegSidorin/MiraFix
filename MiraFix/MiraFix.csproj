@@ -78,14 +78,21 @@
   <ItemGroup>
     <None Include="MiraFix.addin" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="commands\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="res\chain-kr-inzh.png" />
+    <Content Include="res\chain.png" />
+    <Content Include="res\left-filled-arrow-pngrepo-com.png" />
     <Content Include="res\MIRAFIX_FOP.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="res\mira_button_01-16.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="res\mira_button_01-32.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\mira_button_02-16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="res\mira_button_02-32.png">

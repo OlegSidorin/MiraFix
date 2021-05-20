@@ -34,7 +34,7 @@
             #region Копирует данные параметра Mira в новый параметр в выделенном элементе
             try
             {
-                using (Transaction t = new Transaction(doc, "on45"))
+                using (Transaction t = new Transaction(doc, "on55"))
                 {
                     t.Start();
                     Guid.TryParse("000508ad-5ea5-607b-58dc-861fd8601099", out Guid g);
@@ -45,7 +45,7 @@
                         //ElementType myElementType = doc.GetElement(myElement.GetTypeId()) as ElementType;
                         string pValue = myElement.get_Parameter(g).AsString();
                         string pTempValue = myElement.get_Parameter(gTemp).AsString();
-                        if (pValue != "")
+                        if (pTempValue != "")
                         {
                             myElement.get_Parameter(g).Set(pTempValue);
                             myElement.get_Parameter(gTemp).Set("");
@@ -54,9 +54,9 @@
                         //SharedParameterElement spTemp = SharedParameterElement.Lookup(doc, gTemp);
                         //InternalDefinition def = sp.GetDefinition();
                     }
-                    catch
+                    catch (Exception e)
                     {
-                        //TaskDialog.Show("1", "Надо выделить элемент");
+                        TaskDialog.Show("1", "Надо выделить элемент " + e.ToString());
                         return Result.Succeeded;
                     }
                     //TaskDialog.Show("123", "did");
