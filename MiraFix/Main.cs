@@ -66,7 +66,7 @@
             PushButtonData Mira01BtnData = new PushButtonData(Button1Name, Button1Text, path, "MiraFix.Button01Command")
             {
                 ToolTipImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_01-32.png", UriKind.Absolute)),
-                ToolTip = "Переносит McCm_HostUniqueId в McCm_HostUniqueIdTemp" +
+                ToolTip = "Переносит McCm_HostUniqueId в McCm_HostUniqueId_KR" +
                 "\nдля согласования размещения отверстий с проектом КР"
             };
             Mira01BtnData.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_01-32.png", UriKind.Absolute));
@@ -76,7 +76,7 @@
             PushButtonData Mira02BtnData = new PushButtonData(Button2Name, Button2Text, path, "MiraFix.Button02Command")
             {
                 ToolTipImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_02-32.png", UriKind.Absolute)),
-                ToolTip = "Возвращает McCm_HostUniqueId из McCm_HostUniqueIdTemp" +
+                ToolTip = "Возвращает McCm_HostUniqueId из McCm_HostUniqueId_KR" +
                 "\n  для согласования размещения отверстий с инженерным проектом"
             };
             Mira02BtnData.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_02-32.png", UriKind.Absolute));

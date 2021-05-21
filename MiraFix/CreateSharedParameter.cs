@@ -47,9 +47,9 @@
                     t.Start("Add Shared Parameters");
                     DefinitionFile sharedParameterFile = app.OpenSharedParameterFile();
                     DefinitionGroup sharedParameterGroup = sharedParameterFile.Groups.get_Item("GROUP");
-                    Definition sharedParameterDefinition = sharedParameterGroup.Definitions.get_Item("McCm_HostUniqueIdTemp");
+                    Definition sharedParameterDefinition = sharedParameterGroup.Definitions.get_Item("McCm_HostUniqueId_KR");
                     ExternalDefinition externalDefinition =
-                    sharedParameterGroup.Definitions.get_Item("McCm_HostUniqueIdTemp") as ExternalDefinition;
+                        sharedParameterGroup.Definitions.get_Item("McCm_HostUniqueId_KR") as ExternalDefinition;
                     guid = externalDefinition.GUID;
                     InstanceBinding newIB = app.Create.NewInstanceBinding(catSet);
                     doc.ParameterBindings.Insert(externalDefinition, newIB, BuiltInParameterGroup.INVALID);
