@@ -18,9 +18,9 @@
         public static string TabName { get; set; } = "◄Miracad►";
         public static string PanelName { get; set; } = "Согласование";
         public static string Button1Name { get; set; } = "MoveIDBtn";
-        public static string Button1Text { get; set; } = "Согласование\nс конструктором";
+        public static string Button1Text { get; set; } = "Согл.\nс КР";
         public static string Button2Name { get; set; } = "ReturnIDBtn";
-        public static string Button2Text { get; set; } = "Согласование\nс инженером";
+        public static string Button2Text { get; set; } = "Согл.\nс ИНЖ";
         public Result OnStartup(UIControlledApplication application)
         {
             #region если нужно, то можно получить наименования панелей
@@ -53,12 +53,12 @@
             //string str = "";
             var ribbonPanels = application.GetRibbonPanels("◄Miracad►");
 
-            RibbonPanel navigatonPanel = null;
+            RibbonPanel targetPanel = null;
 
             foreach (RibbonPanel ribbonPanel in ribbonPanels)
             {
-                if (ribbonPanel.Name == "Панель навигации")
-                    navigatonPanel = ribbonPanel;
+                if (ribbonPanel.Name == "ПО")
+                    targetPanel = ribbonPanel;
                 
             }
             //TaskDialog.Show("123", str);
@@ -70,7 +70,7 @@
                 "\nдля согласования размещения отверстий с проектом КР"
             };
             Mira01BtnData.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_01-32.png", UriKind.Absolute));
-            //PushButton Mira01Btn = panelMira.AddItem(Mira01BtnData) as PushButton;
+            PushButton Mira01Btn = targetPanel.AddItem(Mira01BtnData) as PushButton;
             //Mira01Btn.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_01-32.png", UriKind.Absolute));
 
             PushButtonData Mira02BtnData = new PushButtonData(Button2Name, Button2Text, path, "MiraFix.Button02Command")
@@ -80,15 +80,16 @@
                 "\n  для согласования размещения отверстий с инженерным проектом"
             };
             Mira02BtnData.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_02-32.png", UriKind.Absolute));
-            //PushButton Mira02Btn = panelMira.AddItem(Mira02BtnData) as PushButton;
+            PushButton Mira02Btn = targetPanel.AddItem(Mira02BtnData) as PushButton;
             //Mira02Btn.LargeImage = new BitmapImage(new Uri(Path.GetDirectoryName(path) + "\\res\\mira_button_02-32.png", UriKind.Absolute));
             //string str = "";
 
+            
 
-            SplitButtonData sBtnData = new SplitButtonData("splitButton1", "Split");
-            SplitButton sBtn = navigatonPanel.AddItem(sBtnData) as SplitButton;
-            sBtn.AddPushButton(Mira01BtnData);
-            sBtn.AddPushButton(Mira02BtnData);
+            //SplitButtonData sBtnData = new SplitButtonData("splitButton1", "Split");
+            //SplitButton sBtn = navigatonPanel.AddItem(sBtnData) as SplitButton;
+            //sBtn.AddPushButton(Mira01BtnData);
+            //sBtn.AddPushButton(Mira02BtnData);
 
 
             return Result.Succeeded;

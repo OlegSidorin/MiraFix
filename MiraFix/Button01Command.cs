@@ -50,6 +50,7 @@
                             {
                                 gmodel.get_Parameter(gTemp).Set(pValue);
                                 gmodel.get_Parameter(g).Set("");
+                                gmodel.GetParameters("Комментарии")[0].Set("Согласование с КР");
                             }
                         }
                         

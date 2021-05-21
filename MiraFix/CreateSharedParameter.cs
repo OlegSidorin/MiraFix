@@ -20,7 +20,11 @@
 
             CategorySet catSet = app.Create.NewCategorySet();
             Categories categories = doc.Settings.Categories;
+            Category catGM = doc.Settings.Categories.get_Item(BuiltInCategory.OST_GenericModel);
+            catSet.Insert(catGM);
 
+            #region allcategory
+            /*
             foreach (Category c in categories)
             {
                 if (c.AllowsBoundParameters)
@@ -35,6 +39,9 @@
                     }
                 }
             }
+            */
+            #endregion
+
             string originalFile = app.SharedParametersFilename;
             string tempFile = Path.GetDirectoryName(path) + "\\res\\MIRAFIX_FOP.txt";
 

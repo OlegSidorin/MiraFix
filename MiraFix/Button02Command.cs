@@ -50,6 +50,7 @@
                             {
                                 gmodel.get_Parameter(g).Set(pTempValue);
                                 gmodel.get_Parameter(gTemp).Set("");
+                                gmodel.GetParameters("Комментарии")[0].Set("Согласование с инженерным проектом");
                             }
                         }
 
